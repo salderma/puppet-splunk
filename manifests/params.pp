@@ -37,6 +37,10 @@ class splunk::params {
 
   $protocol = 'tcp'
 
+  $port_web = '8000'
+
+  $port_data = '9997'
+
 
   ### General variables that affect module's behaviour
   # They can be set at top scope level or in a ENC

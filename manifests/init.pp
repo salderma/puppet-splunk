@@ -275,7 +275,10 @@ class splunk (
   }
 
   # If $splunk::disable == true we dont check splunk on the local system
-  if $splunk::bool_absent == true or $splunk::bool_disable == true or $splunk::bool_disableboot == true {
+  if $splunk::bool_absent == true
+  or $splunk::bool_disable == true
+  or $splunk::bool_monitor == false
+  or $splunk::bool_disableboot == true {
     $manage_monitor = false
   } else {
     $manage_monitor = true
@@ -303,7 +306,7 @@ class splunk (
   if $splunk::install_source != '' {
 
     $install_command = $::operatingsystem ? {
-      /(?i:Debian|Ubuntu|Mint)/            => "wget \'${splunk::install_source}\' -O /tmp/splunk.deb ; dpkg -i /tmp/splunk.deb",
+      /(?i:Debian|Ubuntu|Mint)/                        => "wget \'${splunk::install_source}\' -O /tmp/splunk.deb ; dpkg -i /tmp/splunk.deb",
       /(?i:RedHat|Centos|Scientific|Suse|OracleLinux)/ => "rpm -U ${splunk::install_source}",
     }
 
@@ -498,7 +501,7 @@ class splunk (
 
 
   ### Service monitoring, if enabled ( monitor => true )
-  if $splunk::bool_monitor == true {
+  if $splunk::monitor_tool {
     monitor::port { "splunk_${splunk::protocol}_${splunk::port}":
       protocol => $splunk::protocol,
       port     => $splunk::port,
